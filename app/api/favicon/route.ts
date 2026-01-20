@@ -11,24 +11,57 @@ export async function GET(req: NextRequest) {
   }
 
   const providers = [
-    `https://favicon.pub/api/${domain}?s=128`,
-    `https://api.iowen.cn/favicon/${domain}.png`,
-    `https://unavatar.io/${domain}?fallback=false`,
-    `https://favicon.rss.ink/v1/${domain}`,
-    `https://icon.horse/icon/${domain}`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    `https://unavatar.io/${domain}?fallback=false`,
   ];
 
+  // 优先尝试 Google (Vercel 环境下 Google 通常最快且质量最高)
   try {
+    const googleUrl = providers[0];
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 2000); // Google 2秒超时
+
+    const res = await fetch(googleUrl, {
+      signal: controller.signal,
+      next: { revalidate: 2592000 },
+      headers: {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Referer': 'https://www.google.com/',
+      },
+    });
+    
+    clearTimeout(timeoutId);
+
+    if (res.ok) {
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.startsWith('image/')) {
+        const buffer = await res.arrayBuffer();
+        if (buffer.byteLength > 50) {
+           return new NextResponse(buffer, {
+            headers: {
+              'Content-Type': contentType,
+              'Cache-Control': 'public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=604800',
+            },
+          });
+        }
+      }
+    }
+  } catch (e) {
+    // Google 失败，继续尝试其他
+    console.error('Google favicon fetch failed:', e);
+  }
+
+  try {
+    // 如果 Google 失败，尝试其他高质量源 (Unavatar)
     const response = await Promise.any(
-      providers.map(async (url) => {
+      providers.slice(1).map(async (url) => {
         const controller = new AbortController();
-        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
+        const timeoutId = setTimeout(() => controller.abort(), 5000); 
 
         try {
           const res = await fetch(url, {
             signal: controller.signal,
-            next: { revalidate: 2592000 }, // 30天缓存
+            next: { revalidate: 2592000 }, 
           });
           
           clearTimeout(timeoutId);
@@ -43,7 +76,6 @@ export async function GET(req: NextRequest) {
           }
 
           const buffer = await res.arrayBuffer();
-          // 简单的长度检查，防止空文件
           if (buffer.byteLength < 50) {
             throw new Error(`Image too small from ${url}`);
           }

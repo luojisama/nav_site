@@ -20,10 +20,7 @@ function SiteCard({ item }: { item: LinkItem }) {
 
   const faviconUrls = useMemo(() => [
     `/api/favicon?domain=${domain}`,
-    `https://favicon.pub/api/${domain}?s=128`,
     `https://api.iowen.cn/favicon/${domain}.png`,
-    `https://favicon.rss.ink/v1/${domain}`,
-    `https://icon.horse/icon/${domain}`,
     `https://unavatar.io/${domain}?fallback=false`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
   ], [domain]);
@@ -115,8 +112,11 @@ function SiteCard({ item }: { item: LinkItem }) {
                   src={cachedIcon || currentIconUrl} 
                   alt="" 
                   className={`w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-all duration-300 bg-white object-contain absolute inset-0 z-10 ${iconLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  referrerPolicy="no-referrer"
+                  crossOrigin="anonymous"
                   onLoad={handleIconLoad}
                   onError={() => {
+                    console.warn(`Icon load failed for ${domain}: ${currentIconUrl}`);
                     setIconLoaded(false);
                     if (cachedIcon) {
                       setCachedIcon(null);
@@ -179,7 +179,7 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
     const handleScroll = () => {
-      setShowBackToTop(window.scrollY > 400);
+      setShowBackToTop(window.scrollY > 300);
     };
     window.addEventListener("scroll", handleScroll);
 
@@ -204,7 +204,25 @@ export default function Home() {
   }, []);
 
   const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    const duration = 500;
+    const start = window.scrollY;
+    const startTime = performance.now();
+
+    const animateScroll = (currentTime: number) => {
+      const elapsed = currentTime - startTime;
+      const progress = Math.min(elapsed / duration, 1);
+      
+      // Ease out cubic function for smooth effect
+      const easeOutCubic = (t: number) => 1 - Math.pow(1 - t, 3);
+      
+      window.scrollTo(0, start * (1 - easeOutCubic(progress)));
+
+      if (progress < 1) {
+        requestAnimationFrame(animateScroll);
+      }
+    };
+
+    requestAnimationFrame(animateScroll);
   };
 
   const filteredCategories = useMemo(() => {
@@ -274,7 +292,8 @@ export default function Home() {
             <div className="flex items-center gap-3">
               <button 
                 onClick={() => setIsSidebarOpen(true)}
-                className="lg:hidden p-2 -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg"
+                className="lg:hidden w-10 h-10 flex items-center justify-center -ml-2 hover:bg-gray-100 dark:hover:bg-gray-800 rounded-lg transition-colors active:scale-95"
+                aria-label="打开菜单"
               >
                 <Menu className="w-6 h-6" />
               </button>
