@@ -1,4 +1,4 @@
-import { Github, Twitter } from 'lucide-react';
+import { Github, Twitter, Globe } from 'lucide-react';
 
 export interface LinkItem {
   name: string;
@@ -14,18 +14,23 @@ export interface Category {
 
 export const siteConfig = {
   title: "Shiroの个人网页导航站",
-  description: "收集耗用的工具，网站",
+  description: "收集好用的工具，网站",
   author: "User",
   social: [
     {
       name: "GitHub",
-      url: "https://github.com",
+      url: "https://github.com/luojisama",
       icon: Github,
     },
     {
       name: "Twitter",
-      url: "https://twitter.com",
+      url: "https://x.com/shizuku__191981",
       icon: Twitter,
+    },
+    {
+      name: "Blog",
+      url: "https://blog.shiro.team",
+      icon: Globe,
     }
   ],
   categories: [
