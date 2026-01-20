@@ -8,6 +8,7 @@ import { useEffect, useState, useMemo } from "react";
 function SiteCard({ item }: { item: LinkItem }) {
   const [status, setStatus] = useState<'loading' | 'online' | 'offline'>('loading');
   const [iconErrorCount, setIconErrorCount] = useState(0);
+  const [cachedIcon, setCachedIcon] = useState<string | null>(null);
   
   const domain = useMemo(() => {
     try {
@@ -18,7 +19,7 @@ function SiteCard({ item }: { item: LinkItem }) {
   }, [item.url]);
 
   const faviconUrls = useMemo(() => [
-    `/api/favicon?domain=${domain}`, // 优先使用 Vercel 服务端代理
+    `/api/favicon?domain=${domain}`,
     `https://api.iowen.cn/favicon/${domain}.png`,
     `https://favicon.rss.ink/v1/${domain}`,
     `https://unavatar.io/${domain}?fallback=false`,
@@ -29,11 +30,32 @@ function SiteCard({ item }: { item: LinkItem }) {
   const [iconLoaded, setIconLoaded] = useState(false);
   const currentIconUrl = faviconUrls[iconErrorCount];
 
+  // 1. 初始化时检查本地缓存
+  useEffect(() => {
+    if (domain) {
+      const cache = localStorage.getItem(`icon_cache_${domain}`);
+      if (cache) {
+        setCachedIcon(cache);
+        setIconLoaded(true);
+      }
+    }
+  }, [domain]);
+
+  // 2. 当图标加载成功时，存入本地缓存
+  const handleIconLoad = () => {
+    setIconLoaded(true);
+    if (domain && !cachedIcon) {
+      // 为了性能和存储空间，这里存储成功加载的图标索引或URL
+      localStorage.setItem(`icon_cache_${domain}`, currentIconUrl);
+    }
+  };
+
   // 当域名改变时重置图标状态
   useEffect(() => {
     setIconErrorCount(0);
     setAllIconsFailed(false);
     setIconLoaded(false);
+    setCachedIcon(null);
   }, [domain]);
 
   useEffect(() => {
@@ -87,14 +109,17 @@ function SiteCard({ item }: { item: LinkItem }) {
             {domain && !allIconsFailed ? (
               <>
                 <img 
-                  key={currentIconUrl}
-                  src={currentIconUrl} 
+                  key={cachedIcon || currentIconUrl}
+                  src={cachedIcon || currentIconUrl} 
                   alt="" 
                   className={`w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-all duration-300 bg-white object-contain absolute inset-0 z-10 ${iconLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  onLoad={() => setIconLoaded(true)}
+                  onLoad={handleIconLoad}
                   onError={() => {
                     setIconLoaded(false);
-                    if (iconErrorCount < faviconUrls.length - 1) {
+                    if (cachedIcon) {
+                      setCachedIcon(null);
+                      localStorage.removeItem(`icon_cache_${domain}`);
+                    } else if (iconErrorCount < faviconUrls.length - 1) {
                       setIconErrorCount(prev => prev + 1);
                     } else {
                       setAllIconsFailed(true);

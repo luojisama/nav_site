@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
   for (const url of providers) {
     try {
       const response = await fetch(url, {
-        next: { revalidate: 86400 }, // 缓存 24 小时
+        next: { revalidate: 2592000 }, // 服务端缓存 30 天
       });
 
       if (response.ok) {
@@ -31,7 +31,7 @@ export async function GET(req: NextRequest) {
         return new NextResponse(buffer, {
           headers: {
             'Content-Type': contentType || 'image/png',
-            'Cache-Control': 'public, max-age=86400, s-maxage=86400, stale-while-revalidate=604800',
+            'Cache-Control': 'public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=604800',
           },
         });
       }
