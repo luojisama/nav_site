@@ -1,14 +1,13 @@
 'use client';
 
 import { siteConfig, LinkItem } from "@/data/siteConfig";
-import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash, ChevronUp, CheckCircle2, XCircle, Loader2 } from "lucide-react";
+import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash, ChevronUp, Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
+import { SiteIcon } from "./components/SiteIcon";
 
 function SiteCard({ item }: { item: LinkItem }) {
   const [status, setStatus] = useState<'loading' | 'online' | 'offline'>('loading');
-  const [iconErrorCount, setIconErrorCount] = useState(0);
-  const [cachedIcon, setCachedIcon] = useState<string | null>(null);
   
   const domain = useMemo(() => {
     try {
@@ -17,45 +16,6 @@ function SiteCard({ item }: { item: LinkItem }) {
       return '';
     }
   }, [item.url]);
-
-  const faviconUrls = useMemo(() => [
-    `/api/favicon?domain=${domain}`,
-    `https://api.iowen.cn/favicon/${domain}.png`,
-    `https://unavatar.io/${domain}?fallback=false`,
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
-  ], [domain]);
-
-  const [allIconsFailed, setAllIconsFailed] = useState(false);
-  const [iconLoaded, setIconLoaded] = useState(false);
-  const currentIconUrl = faviconUrls[iconErrorCount];
-
-  // 1. 初始化时检查本地缓存
-  useEffect(() => {
-    if (domain) {
-      const cache = localStorage.getItem(`icon_cache_${domain}`);
-      if (cache) {
-        setCachedIcon(cache);
-        setIconLoaded(true);
-      }
-    }
-  }, [domain]);
-
-  // 2. 当图标加载成功时，存入本地缓存
-  const handleIconLoad = () => {
-    setIconLoaded(true);
-    if (domain && !cachedIcon) {
-      // 为了性能和存储空间，这里存储成功加载的图标索引或URL
-      localStorage.setItem(`icon_cache_${domain}`, currentIconUrl);
-    }
-  };
-
-  // 当域名改变时重置图标状态
-  useEffect(() => {
-    setIconErrorCount(0);
-    setAllIconsFailed(false);
-    setIconLoaded(false);
-    setCachedIcon(null);
-  }, [domain]);
 
   useEffect(() => {
     const checkConnectivity = async () => {
@@ -104,42 +64,7 @@ function SiteCard({ item }: { item: LinkItem }) {
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-3">
-          <div className="relative w-8 h-8 flex-shrink-0">
-            {domain && !allIconsFailed ? (
-              <>
-                <img 
-                  key={cachedIcon || currentIconUrl}
-                  src={cachedIcon || currentIconUrl} 
-                  alt="" 
-                  className={`w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-all duration-300 bg-white object-contain absolute inset-0 z-10 ${iconLoaded ? 'opacity-100' : 'opacity-0'}`}
-                  referrerPolicy="no-referrer"
-                  crossOrigin="anonymous"
-                  onLoad={handleIconLoad}
-                  onError={() => {
-                    console.warn(`Icon load failed for ${domain}: ${currentIconUrl}`);
-                    setIconLoaded(false);
-                    if (cachedIcon) {
-                      setCachedIcon(null);
-                      localStorage.removeItem(`icon_cache_${domain}`);
-                    } else if (iconErrorCount < faviconUrls.length - 1) {
-                      setIconErrorCount(prev => prev + 1);
-                    } else {
-                      setAllIconsFailed(true);
-                    }
-                  }}
-                />
-                {!iconLoaded && (
-                  <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary/30 font-bold text-lg absolute inset-0 animate-pulse">
-                    {item.name.charAt(0).toUpperCase()}
-                  </div>
-                )}
-              </>
-            ) : (
-              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-lg shadow-sm group-hover:scale-110 transition-transform">
-                {item.name.charAt(0).toUpperCase()}
-              </div>
-            )}
-          </div>
+          <SiteIcon domain={domain} title={item.name} />
           <h4 className="text-lg font-semibold group-hover:text-primary transition-colors text-foreground truncate max-w-[180px]">
             {item.name}
           </h4>

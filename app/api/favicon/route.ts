@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
 
-export const runtime = 'edge'; // 使用 Edge Runtime 提升全球访问速度
 
 export async function GET(req: NextRequest) {
   const { searchParams } = new URL(req.url);
@@ -12,7 +11,10 @@ export async function GET(req: NextRequest) {
 
   const providers = [
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    `https://favicon.pub/api/${domain}?s=128`,
     `https://unavatar.io/${domain}?fallback=false`,
+    `https://api.iowen.cn/favicon/${domain}.png`,
+    `https://ico.kzw.io/${domain}.png`,
   ];
 
   // 优先尝试 Google (Vercel 环境下 Google 通常最快且质量最高)
