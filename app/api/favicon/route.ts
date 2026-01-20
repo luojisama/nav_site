@@ -12,10 +12,11 @@ export async function GET(req: NextRequest) {
 
   // 服务端尝试获取图标的来源列表
   const providers = [
+    `https://api.iowen.cn/favicon/${domain}.png`,
     `https://unavatar.io/${domain}?fallback=false`,
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-    `https://icon.horse/icon/${domain}`,
     `https://favicon.rss.ink/v1/${domain}`,
+    `https://icon.horse/icon/${domain}`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
   ];
 
   for (const url of providers) {

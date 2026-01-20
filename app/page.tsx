@@ -22,6 +22,7 @@ function SiteCard({ item }: { item: LinkItem }) {
     `/api/favicon?domain=${domain}`,
     `https://api.iowen.cn/favicon/${domain}.png`,
     `https://favicon.rss.ink/v1/${domain}`,
+    `https://icon.horse/icon/${domain}`,
     `https://unavatar.io/${domain}?fallback=false`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
   ], [domain]);
