@@ -1,3 +1,5 @@
+'use client';
+
 import { siteConfig } from "@/data/siteConfig";
 import { ExternalLink } from "lucide-react";
 
