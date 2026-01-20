@@ -7,7 +7,17 @@ export default function Home() {
       {/* Header */}
       <header className="border-b sticky top-0 bg-background/80 backdrop-blur-sm z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {siteConfig.avatar && (
+              <img 
+                src={siteConfig.avatar} 
+                alt={siteConfig.author} 
+                className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            )}
             <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
               {siteConfig.title}
             </h1>
@@ -33,6 +43,18 @@ export default function Home() {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Hero Section */}
         <div className="text-center mb-16">
+          {siteConfig.avatar && (
+            <div className="mb-6 flex justify-center">
+              <img 
+                src={siteConfig.avatar} 
+                alt={siteConfig.author} 
+                className="w-24 h-24 rounded-full border-4 border-white dark:border-gray-800 shadow-lg"
+                onError={(e) => {
+                  (e.target as HTMLImageElement).style.display = 'none';
+                }}
+              />
+            </div>
+          )}
           <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4">
             {siteConfig.description}
           </h2>

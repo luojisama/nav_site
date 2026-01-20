@@ -15,7 +15,8 @@ export interface Category {
 export const siteConfig = {
   title: "Shiroの个人网页导航站",
   description: "收集好用的工具，网站",
-  author: "User",
+  author: "Shiro",
+  avatar: "https://blog.shiro.team/avatar.png", // 你可以替换为实际的头像地址
   social: [
     {
       name: "GitHub",
