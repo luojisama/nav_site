@@ -10,8 +10,8 @@ export async function GET(req: NextRequest) {
     return new NextResponse('Domain is required', { status: 400 });
   }
 
-  // 服务端尝试获取图标的来源列表
   const providers = [
+    `https://favicon.pub/api/${domain}?s=128`,
     `https://api.iowen.cn/favicon/${domain}.png`,
     `https://unavatar.io/${domain}?fallback=false`,
     `https://favicon.rss.ink/v1/${domain}`,
@@ -19,28 +19,51 @@ export async function GET(req: NextRequest) {
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
   ];
 
-  for (const url of providers) {
-    try {
-      const response = await fetch(url, {
-        next: { revalidate: 2592000 }, // 服务端缓存 30 天
-      });
+  try {
+    const response = await Promise.any(
+      providers.map(async (url) => {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 5000); // 5秒超时
 
-      if (response.ok) {
-        const contentType = response.headers.get('content-type');
-        const buffer = await response.arrayBuffer();
+        try {
+          const res = await fetch(url, {
+            signal: controller.signal,
+            next: { revalidate: 2592000 }, // 30天缓存
+          });
+          
+          clearTimeout(timeoutId);
 
-        return new NextResponse(buffer, {
-          headers: {
-            'Content-Type': contentType || 'image/png',
-            'Cache-Control': 'public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=604800',
-          },
-        });
-      }
-    } catch (e) {
-      continue;
-    }
+          if (!res.ok) {
+            throw new Error(`Failed to fetch from ${url}: ${res.status}`);
+          }
+
+          const contentType = res.headers.get('content-type');
+          if (!contentType || !contentType.startsWith('image/')) {
+            throw new Error(`Invalid content type from ${url}: ${contentType}`);
+          }
+
+          const buffer = await res.arrayBuffer();
+          // 简单的长度检查，防止空文件
+          if (buffer.byteLength < 50) {
+            throw new Error(`Image too small from ${url}`);
+          }
+
+          return { buffer, contentType };
+        } catch (e) {
+          clearTimeout(timeoutId);
+          throw e;
+        }
+      })
+    );
+
+    return new NextResponse(response.buffer, {
+      headers: {
+        'Content-Type': response.contentType || 'image/png',
+        'Cache-Control': 'public, max-age=2592000, s-maxage=2592000, stale-while-revalidate=604800',
+      },
+    });
+  } catch (error) {
+    // 所有 providers 都失败
+    return new NextResponse('Not Found', { status: 404 });
   }
-
-  // 如果所有 provider 都失败，返回 404 让前端回退到文字头像
-  return new NextResponse('Not Found', { status: 404 });
 }

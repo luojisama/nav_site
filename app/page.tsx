@@ -20,6 +20,7 @@ function SiteCard({ item }: { item: LinkItem }) {
 
   const faviconUrls = useMemo(() => [
     `/api/favicon?domain=${domain}`,
+    `https://favicon.pub/api/${domain}?s=128`,
     `https://api.iowen.cn/favicon/${domain}.png`,
     `https://favicon.rss.ink/v1/${domain}`,
     `https://icon.horse/icon/${domain}`,
