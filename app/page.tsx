@@ -37,7 +37,7 @@ export default function Home() {
             {siteConfig.description}
           </h2>
           <p className="text-xl text-gray-500 max-w-2xl mx-auto">
-            一个简单、优雅的导航网站，收集最优质的开发者资源。
+            一个简单、优雅的导航网站，收集好用的资源，网站。
           </p>
         </div>
 
