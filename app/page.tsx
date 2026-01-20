@@ -29,14 +29,14 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
       {/* Header */}
-      <header className="border-b sticky top-0 bg-background/80 backdrop-blur-md z-10 border-gray-200 dark:border-gray-800">
+      <header className="border-b sticky top-0 bg-background/80 backdrop-blur-md z-10 border-card-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
           <div className="flex items-center gap-3">
             {siteConfig.avatar && (
               <img 
                 src={siteConfig.avatar} 
                 alt={siteConfig.author} 
-                className="w-8 h-8 rounded-full border border-gray-200 dark:border-gray-700"
+                className="w-8 h-8 rounded-full border border-card-border"
                 onError={(e) => {
                   (e.target as HTMLImageElement).style.display = 'none';
                 }}
@@ -49,7 +49,7 @@ export default function Home() {
           <div className="flex items-center gap-4">
             <button
               onClick={toggleTheme}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium"
+              className="p-2 rounded-lg hover:bg-gray-200 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium"
               title={mounted ? `当前模式: ${theme === 'system' ? '跟随系统' : theme === 'dark' ? '深色' : '浅色'}` : '加载中'}
             >
               <ThemeIcon />
@@ -63,7 +63,7 @@ export default function Home() {
                 href={item.url}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="text-gray-500 hover:text-primary dark:hover:text-primary transition-colors"
+                className="text-gray-500 hover:text-primary transition-colors"
               >
                 <item.icon className="w-5 h-5" />
                 <span className="sr-only">{item.name}</span>
@@ -89,10 +89,10 @@ export default function Home() {
               />
             </div>
           )}
-          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4 text-gray-900 dark:text-white">
+          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4 text-foreground">
             {siteConfig.description}
           </h2>
-          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto">
+          <p className="text-xl text-gray-500 dark:text-gray-400 max-w-2xl mx-auto font-medium">
             一个简单、优雅的导航网站，收集最优质的开发者资源。
           </p>
         </div>
@@ -101,7 +101,7 @@ export default function Home() {
         <div className="space-y-16">
           {siteConfig.categories.map((category) => (
             <section key={category.title} id={category.title}>
-              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 border-l-4 border-primary pl-4 text-gray-900 dark:text-white">
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 border-l-4 border-primary pl-4 text-foreground">
                 {category.title}
               </h3>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -111,10 +111,10 @@ export default function Home() {
                     href={item.url}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="group block p-6 bg-white dark:bg-gray-800/50 rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-gray-100 dark:border-gray-700 hover:border-primary dark:hover:border-primary relative overflow-hidden"
+                    className="group block p-6 bg-card-bg rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-card-border hover:border-primary relative overflow-hidden"
                   >
                     <div className="flex items-start justify-between mb-2">
-                      <h4 className="text-lg font-semibold group-hover:text-primary transition-colors text-gray-900 dark:text-gray-100">
+                      <h4 className="text-lg font-semibold group-hover:text-primary transition-colors text-foreground">
                         {item.name}
                       </h4>
                       <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0" />
@@ -131,7 +131,7 @@ export default function Home() {
       </main>
 
       {/* Footer */}
-      <footer className="border-t mt-20 py-12 bg-gray-50 dark:bg-gray-900/30 border-gray-200 dark:border-gray-800">
+      <footer className="border-t mt-20 py-12 bg-gray-50 dark:bg-gray-900/30 border-card-border">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 dark:text-gray-400">
           <p>© {new Date().getFullYear()} {siteConfig.author}. All rights reserved.</p>
           <p className="mt-2 text-sm">
