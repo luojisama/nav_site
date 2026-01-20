@@ -1,7 +1,7 @@
 'use client';
 
 import { siteConfig } from "@/data/siteConfig";
-import { ExternalLink, Sun, Moon } from "lucide-react";
+import { ExternalLink, Sun, Moon, Monitor } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState } from "react";
 
@@ -12,6 +12,19 @@ export default function Home() {
   useEffect(() => {
     setMounted(true);
   }, []);
+
+  const toggleTheme = () => {
+    if (theme === 'light') setTheme('dark');
+    else if (theme === 'dark') setTheme('system');
+    else setTheme('light');
+  };
+
+  const ThemeIcon = () => {
+    if (!mounted) return <Monitor className="w-5 h-5" />;
+    if (theme === 'light') return <Sun className="w-5 h-5" />;
+    if (theme === 'dark') return <Moon className="w-5 h-5" />;
+    return <Monitor className="w-5 h-5" />;
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground transition-colors duration-300">
@@ -35,11 +48,14 @@ export default function Home() {
           </div>
           <div className="flex items-center gap-4">
             <button
-              onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-              aria-label="Toggle theme"
+              onClick={toggleTheme}
+              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors flex items-center gap-2 text-sm font-medium"
+              title={mounted ? `当前模式: ${theme === 'system' ? '跟随系统' : theme === 'dark' ? '深色' : '浅色'}` : '加载中'}
             >
-              {mounted && (theme === "dark" ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />)}
+              <ThemeIcon />
+              <span className="hidden sm:inline">
+                {mounted ? (theme === 'system' ? '跟随系统' : theme === 'dark' ? '深色模式' : '浅色模式') : '...'}
+              </span>
             </button>
             {siteConfig.social.map((item) => (
               <a
