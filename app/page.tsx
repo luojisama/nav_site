@@ -1,65 +1,88 @@
-import Image from "next/image";
+import { siteConfig } from "@/data/siteConfig";
+import { ExternalLink } from "lucide-react";
 
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <header className="border-b sticky top-0 bg-background/80 backdrop-blur-sm z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+          <div className="flex items-center gap-2">
+            <h1 className="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-blue-500 to-purple-600">
+              {siteConfig.title}
+            </h1>
+          </div>
+          <div className="flex items-center gap-4">
+            {siteConfig.social.map((item) => (
+              <a
+                key={item.name}
+                href={item.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-gray-500 hover:text-gray-900 dark:hover:text-gray-100 transition-colors"
+              >
+                <item.icon className="w-5 h-5" />
+                <span className="sr-only">{item.name}</span>
+              </a>
+            ))}
+          </div>
+        </div>
+      </header>
+
+      {/* Main Content */}
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Hero Section */}
+        <div className="text-center mb-16">
+          <h2 className="text-4xl font-extrabold tracking-tight sm:text-5xl mb-4">
+            {siteConfig.description}
+          </h2>
+          <p className="text-xl text-gray-500 max-w-2xl mx-auto">
+            一个简单、优雅的导航网站，收集最优质的开发者资源。
           </p>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+
+        {/* Categories */}
+        <div className="space-y-16">
+          {siteConfig.categories.map((category) => (
+            <section key={category.title} id={category.title}>
+              <h3 className="text-2xl font-bold mb-6 flex items-center gap-2 border-l-4 border-blue-500 pl-4">
+                {category.title}
+              </h3>
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                {category.items.map((item) => (
+                  <a
+                    key={item.name}
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group block p-6 bg-white dark:bg-gray-800 rounded-xl shadow-sm hover:shadow-md transition-all duration-200 border border-gray-100 dark:border-gray-700 hover:border-blue-500 dark:hover:border-blue-500 relative overflow-hidden"
+                  >
+                    <div className="flex items-start justify-between mb-2">
+                      <h4 className="text-lg font-semibold group-hover:text-blue-500 transition-colors">
+                        {item.name}
+                      </h4>
+                      <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-blue-500 opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0" />
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2">
+                      {item.description}
+                    </p>
+                  </a>
+                ))}
+              </div>
+            </section>
+          ))}
         </div>
       </main>
+
+      {/* Footer */}
+      <footer className="border-t mt-20 py-12 bg-gray-50 dark:bg-gray-900/50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500">
+          <p>© {new Date().getFullYear()} {siteConfig.author}. All rights reserved.</p>
+          <p className="mt-2 text-sm">
+            Powered by <a href="https://nextjs.org" className="hover:text-gray-900 dark:hover:text-gray-100 underline">Next.js</a> & <a href="https://vercel.com" className="hover:text-gray-900 dark:hover:text-gray-100 underline">Vercel</a>
+          </p>
+        </div>
+      </footer>
     </div>
   );
 }
