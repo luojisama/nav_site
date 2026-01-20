@@ -41,7 +41,7 @@ export const siteConfig = {
       items: [
         {
           name: "ChatGPT",
-          url: "https://chat.openai.com",
+          url: "https://chatgpt.com",
           description: "OpenAI 开发的强大 AI 聊天机器人",
         },
         {

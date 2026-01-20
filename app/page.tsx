@@ -1,9 +1,145 @@
 'use client';
 
-import { siteConfig } from "@/data/siteConfig";
-import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash, ChevronUp } from "lucide-react";
+import { siteConfig, LinkItem } from "@/data/siteConfig";
+import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash, ChevronUp, CheckCircle2, XCircle, Loader2 } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
+
+function SiteCard({ item }: { item: LinkItem }) {
+  const [status, setStatus] = useState<'loading' | 'online' | 'offline'>('loading');
+  const [iconErrorCount, setIconErrorCount] = useState(0);
+  
+  const domain = useMemo(() => {
+    try {
+      return new URL(item.url).hostname;
+    } catch (e) {
+      return '';
+    }
+  }, [item.url]);
+
+  const faviconUrls = useMemo(() => [
+    `https://unavatar.io/${domain}?fallback=false`,
+    `https://api.iowen.cn/favicon/${domain}.png`,
+    `https://icon.horse/icon/${domain}`,
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
+    `https://icons.duckduckgo.com/ip3/${domain}.ico`
+  ], [domain]);
+
+  const [allIconsFailed, setAllIconsFailed] = useState(false);
+  const [iconLoaded, setIconLoaded] = useState(false);
+  const currentIconUrl = faviconUrls[iconErrorCount];
+
+  // 当域名改变时重置图标状态
+  useEffect(() => {
+    setIconErrorCount(0);
+    setAllIconsFailed(false);
+    setIconLoaded(false);
+  }, [domain]);
+
+  useEffect(() => {
+    const checkConnectivity = async () => {
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 8000); // 增加到8秒
+      
+      try {
+        // 优先使用 fetch no-cors 尝试
+        await fetch(item.url, { 
+          mode: 'no-cors', 
+          cache: 'no-store',
+          signal: controller.signal,
+          headers: {
+            'Pragma': 'no-cache',
+            'Cache-Control': 'no-cache'
+          }
+        });
+        setStatus('online');
+      } catch (e) {
+        // 如果 fetch 失败（可能是由于严格的 CORS 或其他原因），
+        // 尝试使用图片加载作为保底检测方式，因为图片加载受 CORS 限制较小
+        const img = new Image();
+        img.onload = () => setStatus('online');
+        img.onerror = () => setStatus('offline');
+        // 尝试加载该域名的 favicon.ico，这通常是允许跨域读取的资源
+        img.src = `${item.url}/favicon.ico?t=${Date.now()}`;
+        
+        // 再次设置一个保底超时，如果图片加载也卡住了
+        setTimeout(() => {
+          if (status === 'loading') setStatus('offline');
+        }, 5000);
+      } finally {
+        clearTimeout(timeoutId);
+      }
+    };
+
+    checkConnectivity();
+  }, [item.url, domain]);
+
+  return (
+    <a
+      href={item.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className="group block p-6 bg-card-bg rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-card-border hover:border-primary relative overflow-hidden"
+    >
+      <div className="flex items-start justify-between mb-3">
+        <div className="flex items-center gap-3">
+          <div className="relative w-8 h-8 flex-shrink-0">
+            {domain && !allIconsFailed ? (
+              <>
+                <img 
+                  key={currentIconUrl}
+                  src={currentIconUrl} 
+                  alt="" 
+                  className={`w-8 h-8 rounded-lg shadow-sm group-hover:scale-110 transition-all duration-300 bg-white object-contain absolute inset-0 z-10 ${iconLoaded ? 'opacity-100' : 'opacity-0'}`}
+                  onLoad={() => setIconLoaded(true)}
+                  onError={() => {
+                    setIconLoaded(false);
+                    if (iconErrorCount < faviconUrls.length - 1) {
+                      setIconErrorCount(prev => prev + 1);
+                    } else {
+                      setAllIconsFailed(true);
+                    }
+                  }}
+                />
+                {!iconLoaded && (
+                  <div className="w-8 h-8 rounded-lg bg-primary/5 flex items-center justify-center text-primary/30 font-bold text-lg absolute inset-0 animate-pulse">
+                    {item.name.charAt(0).toUpperCase()}
+                  </div>
+                )}
+              </>
+            ) : (
+              <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary font-bold text-lg shadow-sm group-hover:scale-110 transition-transform">
+                {item.name.charAt(0).toUpperCase()}
+              </div>
+            )}
+          </div>
+          <h4 className="text-lg font-semibold group-hover:text-primary transition-colors text-foreground truncate max-w-[180px]">
+            {item.name}
+          </h4>
+        </div>
+        <div className="flex items-center gap-2">
+          {status === 'loading' ? (
+            <Loader2 className="w-4 h-4 text-gray-400 animate-spin" />
+          ) : status === 'online' ? (
+            <div className="flex items-center gap-1 text-[10px] font-medium text-emerald-500 bg-emerald-500/10 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+              在线
+            </div>
+          ) : (
+            <div className="flex items-center gap-1 text-[10px] font-medium text-rose-500 bg-rose-500/10 px-2 py-0.5 rounded-full">
+              <span className="w-1.5 h-1.5 rounded-full bg-rose-500" />
+              离线
+            </div>
+          )}
+          <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0" />
+        </div>
+      </div>
+      <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2 min-h-[40px]">
+        {item.description}
+      </p>
+    </a>
+  );
+}
 
 export default function Home() {
   const { theme, setTheme } = useTheme();
@@ -206,23 +342,7 @@ export default function Home() {
                   </h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     {category.items.map((item) => (
-                      <a
-                        key={item.name}
-                        href={item.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="group block p-6 bg-card-bg rounded-xl shadow-sm hover:shadow-xl transition-all duration-300 border border-card-border hover:border-primary relative overflow-hidden"
-                      >
-                        <div className="flex items-start justify-between mb-2">
-                          <h4 className="text-lg font-semibold group-hover:text-primary transition-colors text-foreground">
-                            {item.name}
-                          </h4>
-                          <ExternalLink className="w-4 h-4 text-gray-400 group-hover:text-primary opacity-0 group-hover:opacity-100 transition-all transform translate-x-2 group-hover:translate-x-0" />
-                        </div>
-                        <p className="text-gray-500 dark:text-gray-400 text-sm line-clamp-2">
-                          {item.description}
-                        </p>
-                      </a>
+                      <SiteCard key={item.name} item={item} />
                     ))}
                   </div>
                 </section>
