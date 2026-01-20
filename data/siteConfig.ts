@@ -80,7 +80,7 @@ export const siteConfig = {
           description: "夸克解析工具，支持解析夸克网盘链接",
         },
         {
-          name: "百度网盘",
+          name: "百度解析",
           url: "https://kdown.moiu.cn/free/#/index",
           description: "百度网盘解析工具，支持解析百度网盘链接",
         },
