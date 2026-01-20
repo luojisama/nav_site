@@ -18,12 +18,11 @@ function SiteCard({ item }: { item: LinkItem }) {
   }, [item.url]);
 
   const faviconUrls = useMemo(() => [
+    `/api/favicon?domain=${domain}`, // 优先使用 Vercel 服务端代理
     `https://api.iowen.cn/favicon/${domain}.png`,
     `https://favicon.rss.ink/v1/${domain}`,
     `https://unavatar.io/${domain}?fallback=false`,
-    `https://icon.horse/icon/${domain}`,
-    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
-    `https://icons.duckduckgo.com/ip3/${domain}.ico`
+    `https://www.google.com/s2/favicons?domain=${domain}&sz=128`
   ], [domain]);
 
   const [allIconsFailed, setAllIconsFailed] = useState(false);
