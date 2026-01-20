@@ -18,8 +18,9 @@ function SiteCard({ item }: { item: LinkItem }) {
   }, [item.url]);
 
   const faviconUrls = useMemo(() => [
-    `https://unavatar.io/${domain}?fallback=false`,
     `https://api.iowen.cn/favicon/${domain}.png`,
+    `https://favicon.rss.ink/v1/${domain}`,
+    `https://unavatar.io/${domain}?fallback=false`,
     `https://icon.horse/icon/${domain}`,
     `https://www.google.com/s2/favicons?domain=${domain}&sz=128`,
     `https://icons.duckduckgo.com/ip3/${domain}.ico`
