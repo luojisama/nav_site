@@ -36,27 +36,47 @@ export const siteConfig = {
   ],
   categories: [
     {
-      title: "AI 工具",
+      title: "AI",
       items: [
         {
           name: "ChatGPT",
           url: "https://chat.openai.com",
           description: "OpenAI 开发的强大 AI 聊天机器人",
         },
-                {
+        {
           name: "Gemini",
           url: "https://gemini.google.com/app",
           description: "谷歌开发的的Gemini",
         },
         {
+          name: "豆包",
+          url: "https://www.doubao.com",
+          description: "字节跳动旗下AI助手",
+        },
+        {
+          name: "即梦",
+          url: "https://jimeng.jianying.com/ai-tool/home",
+          description: "字节跳动旗下AI创作助手",
+        },
+        {
+          name: "Trae",
+          url: "https://www.trae.ai",
+          description: "字节跳动旗下AI编程IDE",
+        },
+        {
+          name: "Trae CN",
+          url: "https://www.trae.cn",
+          description: "字节跳动旗下AI编程IDE-中国版",
+        },
+        {
           name: "柏拉图api中转站",
           url: "https://api.bltcy.ai/register?aff=lfpE63220",
-          description: "高性价比的模型api，支持多种模型",
+          description: "高性价比api，支持多种模型",
         },
         {
           name: "Aihubmix",
           url: "https://aihubmix.com/?aff=0MsT",
-          description: "高质量的模型api，支持多种模型",
+          description: "高质量api，支持多种模型",
         },
         {
           name: "Cherry Studio",
@@ -69,6 +89,66 @@ export const siteConfig = {
           description: "与Cherry Studio类似，适用于移动端",
         },
 
+      ]
+    },
+    {
+      title: "动漫，影视资源",
+      items: [
+        {
+          name: "动漫花园",
+          url: "https://dmhy.anoneko.com/",
+          description: "动漫花园资源网",
+        },
+        {
+          name: "Kazumi",
+          url: "https://kazumi.app/",
+          description: "使用 Flutter 开发的基于自定义规则的番剧采集与在线观看程序",
+        },
+        {
+          name: "次元城动漫",
+          url: "https://www.cycity.pro/",
+          description: "免费观看动漫网页/APP",
+        },
+        {
+          name: "不太灵影视",
+          url: "http://www.butailing.com/",
+          description: "在线观看电影/电视剧",
+        },
+        {
+          name: "网飞猫",
+          url: "https://www.ncat1.app/",
+          description: "在线观看电影/电视剧",
+        },
+        {
+          name: "柯南影视",
+          url: "https://www.knvod.com/",
+          description: "在线观看电影/电视剧",
+        },
+    ]
+    },
+    {
+      title: "工具",
+      items: [
+        {
+          name: "樱花内网穿透",
+          url: "https://www.natfrp.com",
+          description: "内网穿透工具，可用于Minecraft联机",
+        },
+        {
+          name: "ascii2d",
+          url: "https://ascii2d.net/",
+          description: "图片搜索工具",
+        },
+        {
+          name: "csqaq",
+          url: "https://csqaq.com/home",
+          description: "CS2饰品大盘",
+        },
+        {
+          name: "Github Proxy",
+          url: "https://github.akams.cn/",
+          description: "Github下载代理加速",
+        },
       ]
     },
     {
@@ -105,9 +185,44 @@ export const siteConfig = {
           description: "Galgame个人博客",
         },
         {
+          name: "TouchGal",
+          url: "https://www.touchgal.top/",
+          description: "一站式Galgame文化社区",
+        },
+        {
+          name: "NekoNyan",
+          url: "https://patches.nekonyansoft.com/",
+          description: "Galgame补丁",
+        },
+        {
+          name: "FOACG",
+          url: "https://ugal.org/",
+          description: "黄油",
+        },
+        {
+          name: "萌幻之乡",
+          url: "https://www.mhh1.com/",
+          description: "黄油",
+        },
+        {
           name: "风灵月影",
           url: "https://flingtrainer.com/trainer/",
           description: "游戏修改器",
+        },
+        {
+          name: "byrutgame",
+          url: "https://byrutgame.org/",
+          description: "毛子的破解游戏",
+        },
+        {
+          name: "PCL",
+          url: "https://pcl.ruanmao.net/",
+          description: "Minecraft启动器",
+        },
+        {
+          name: "PCL-CE",
+          url: "https://pclce-web.demo.fis.ink/",
+          description: "PCL启动器社区版",
         },
       ]
     },
@@ -130,6 +245,11 @@ export const siteConfig = {
           description: "通用玩机社区，分享玩机经验",
         },
         {
+          name: "萤火虫资源站",
+          url: "https://www.yhcres.top/",
+          description: "专注于安卓玩机和分享资源",
+        },
+        {
           name: "MSDN",
           url: "https://msdn.itellyou.cn/",
           description: "Windows系统镜像下载",
@@ -149,6 +269,12 @@ export const siteConfig = {
           url: "https://tbtool.dawnstd.cn/download/",
           description: "知名综合硬件工具箱",
         },
+        {
+          name: "超能网",
+          url: "https://www.expreview.com/",
+          description: "PC硬件社区",
+        },
+        
       ]
     }
   ] as Category[]
