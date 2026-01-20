@@ -7,13 +7,19 @@
   --color-foreground: var(--foreground);
   --color-card-bg: var(--card-bg);
   --color-card-border: var(--card-border);
+  --color-search-bg: var(--search-bg);
+  --color-search-text: var(--search-text);
+  --color-search-border: var(--search-border);
 }
 
 :root {
-  --background: #f8fafc; /* 浅灰色背景，比纯白更高级 */
+  --background: #f8fafc; /* 浅灰色背景 */
   --foreground: #0f172a; /* 深蓝黑色文字 */
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
+  --search-bg: #ffffff; /* 浅色模式下搜索框纯白 */
+  --search-text: #1e293b; /* 浅色模式下深色字 */
+  --search-border: #e2e8f0;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -22,6 +28,9 @@
     --foreground: #f8fafc;
     --card-bg: rgba(22, 27, 34, 0.5);
     --card-border: #30363d;
+    --search-bg: rgba(13, 17, 23, 0.8); /* 深色模式下深色背景 */
+    --search-text: #f1f5f9; /* 深色模式下浅色字 */
+    --search-border: #30363d;
   }
 }
 
@@ -30,6 +39,9 @@
   --foreground: #0f172a;
   --card-bg: #ffffff;
   --card-border: #e2e8f0;
+  --search-bg: #ffffff;
+  --search-text: #1e293b;
+  --search-border: #e2e8f0;
 }
 
 .dark {
@@ -37,6 +49,9 @@
   --foreground: #f8fafc;
   --card-bg: rgba(22, 27, 34, 0.5);
   --card-border: #30363d;
+  --search-bg: rgba(13, 17, 23, 0.8);
+  --search-text: #f1f5f9;
+  --search-border: #30363d;
 }
 
 body {

@@ -1,7 +1,7 @@
 'use client';
 
 import { siteConfig } from "@/data/siteConfig";
-import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash } from "lucide-react";
+import { ExternalLink, Sun, Moon, Monitor, Search, Menu, X, Hash, ChevronUp } from "lucide-react";
 import { useTheme } from "next-themes";
 import { useEffect, useState, useMemo } from "react";
 
@@ -10,10 +10,39 @@ export default function Home() {
   const [mounted, setMounted] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [isSidebarOpen, setIsSidebarOpen] = useState(false);
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  const [runtime, setRuntime] = useState("");
 
   useEffect(() => {
     setMounted(true);
+    const handleScroll = () => {
+      setShowBackToTop(window.scrollY > 400);
+    };
+    window.addEventListener("scroll", handleScroll);
+
+    // 计算运行时间
+    const timer = setInterval(() => {
+      const start = new Date(siteConfig.siteStartDate || "2026-01-20").getTime();
+      const now = new Date().getTime();
+      const diff = now - start;
+
+      const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+
+      setRuntime(`${days}天 ${hours}时 ${minutes}分 ${seconds}秒`);
+    }, 1000);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      clearInterval(timer);
+    };
   }, []);
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
 
   const filteredCategories = useMemo(() => {
     if (!searchQuery.trim()) return siteConfig.categories;
@@ -104,14 +133,14 @@ export default function Home() {
             {/* Search Bar */}
             <div className="flex-1 max-w-md relative group">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <Search className="h-4 w-4 text-gray-400 group-focus-within:text-primary transition-colors" />
+                <Search className="h-4 w-4 text-slate-400 group-focus-within:text-primary transition-colors" />
               </div>
               <input
                 type="text"
                 placeholder="搜索工具或描述..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-card-border rounded-xl leading-5 bg-gray-50 dark:bg-gray-900/50 placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all"
+                className="block w-full pl-10 pr-3 py-2 border border-card-border rounded-xl leading-5 bg-search-bg text-search-text placeholder-slate-400 dark:placeholder-slate-500 focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary sm:text-sm transition-all shadow-sm"
               />
             </div>
 
@@ -211,15 +240,31 @@ export default function Home() {
         </main>
 
         {/* Footer */}
-        <footer className="border-t mt-auto py-12 bg-gray-50 dark:bg-gray-900/30 border-card-border">
+        <footer className="border-t mt-auto py-12 border-card-border bg-background">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center text-gray-500 dark:text-gray-400">
             <p>© {new Date().getFullYear()} {siteConfig.author}. All rights reserved.</p>
-            <p className="mt-2 text-sm">
+            {runtime && (
+              <p className="mt-2 text-sm font-medium text-primary/80">
+                本站已运行: {runtime}
+              </p>
+            )}
+            <p className="mt-2 text-xs opacity-70">
               Powered by <a href="https://nextjs.org" className="hover:text-primary underline">Next.js</a> & <a href="https://vercel.com" className="hover:text-primary underline">Vercel</a>
             </p>
           </div>
         </footer>
       </div>
+
+      {/* Back to Top Button */}
+      <button
+        onClick={scrollToTop}
+        className={`fixed bottom-8 right-8 p-3 bg-primary text-white rounded-full shadow-lg transition-all duration-300 z-50 hover:bg-primary-hover hover:scale-110 active:scale-95 ${
+          showBackToTop ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10 pointer-events-none'
+        }`}
+        aria-label="回到顶部"
+      >
+        <ChevronUp className="w-6 h-6" />
+      </button>
     </div>
   );
 }

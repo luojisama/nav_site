@@ -17,10 +17,11 @@ export const siteConfig = {
   description: "收集好用的工具，网站",
   author: "Shiro",
   avatar: "https://blog.shiro.team/avatar.png", // 你可以替换为实际的头像地址
+  siteStartDate: "2026-01-20", // 添加站点启动日期
   social: [
     {
       name: "GitHub",
-      url: "https://github.com/luojisama",
+      url: "https://github.com/luojisama/nav_site",
       icon: Github,
     },
     {
