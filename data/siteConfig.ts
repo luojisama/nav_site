@@ -37,6 +37,26 @@ export const siteConfig = {
   ],
   categories: [
     {
+      title: "个人网站",
+      items: [
+        {
+          name: "博客",
+          url: "https://blog.shiro.team/",
+          description: "我的个人博客",
+        },
+        {
+          name: "学歌",
+          url: "https://music.shiro.team/",
+          description: "支持搜索歌曲，单句循环",
+        },
+        {
+          name: "网站导航",
+          url: "https://nav.shiro.team/",
+          description: "本站",
+        },
+      ]
+    },
+    {
       title: "AI",
       items: [
         {
