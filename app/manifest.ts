@@ -12,8 +12,8 @@ export default function manifest(): MetadataRoute.Manifest {
     theme_color: '#000000',
     icons: [
       {
-        src: 'https://blog.shiro.team/favicon/favicon-light-192.png',
-        sizes: '192x192',
+        src: 'https://blog.shiro.team/avatar.png',
+        sizes: 'any',
         type: 'image/png',
       }
     ],

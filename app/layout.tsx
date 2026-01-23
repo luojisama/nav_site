@@ -19,10 +19,10 @@ export const metadata: Metadata = {
   description: siteConfig.description,
   icons: {
     icon: [
-      { url: 'https://blog.shiro.team/favicon/favicon-light-128.png', sizes: 'any' },
+      { url: 'https://blog.shiro.team/avatar.png', sizes: 'any' },
     ],
     apple: [
-      { url: 'https://blog.shiro.team/favicon/favicon-light-128.png', sizes: '180x180', type: 'image/png' },
+      { url: 'https://blog.shiro.team/avatar.png', sizes: '180x180', type: 'image/png' },
     ],
   },
   manifest: '/manifest.webmanifest',
