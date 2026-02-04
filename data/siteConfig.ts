@@ -54,6 +54,11 @@ export const siteConfig = {
           url: "https://nav.shiro.team/",
           description: "本站",
         },
+        {
+          name: "文档",
+          url: "https://docs.shiro.team/",
+          description: "我的项目文档",
+        },
       ]
     },
     {
@@ -183,6 +188,11 @@ export const siteConfig = {
         {
           name: "百度解析",
           url: "https://kdown.moiu.cn/free/#/index",
+          description: "百度网盘解析工具，支持解析百度网盘链接",
+        },
+        {
+          name: "百度解析",
+          url: "https://analysis.icy6.cn/user/parse",
           description: "百度网盘解析工具，支持解析百度网盘链接",
         },
       ]
